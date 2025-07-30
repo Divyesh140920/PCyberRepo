@@ -37,9 +37,3 @@ I’m **Divyesh Sai Gutta**, a Master’s student in **Information Technology an
 
 ---
 
-## 🧪 How to Run
-
-1. **Clone the repo**:
-   ```bash
-   git clone https://github.com/Divyesh140920/educational-keylogger-demo.git
-   cd educational-keylogger-demo
