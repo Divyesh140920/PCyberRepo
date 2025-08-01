@@ -1,0 +1,6 @@
+# Example firewall rules
+ACCEPT tcp 192.168.1.0/24 10.0.0.1 1024 80
+ACCEPT tcp 192.168.1.0/24 10.0.0.2 1025 443
+DROP udp 0.0.0.0/0 10.0.0.5 any any
+REJECT tcp 192.168.1.10 10.0.0.1 22 22
+ACCEPT tcp 192.168.1.0/24 10.0.0.1 1024 80  # Duplicate rule for conflict demo
