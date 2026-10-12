@@ -1,26 +1,38 @@
-# 🧪 Python Network Packet Sniffer — By Divyesh Sai Gutta
+# Python Packet Sniffer
 
-This project demonstrates how to build a real-time network packet sniffer using Python and the `scapy` library. It captures and summarizes IP, TCP/UDP, DNS, and HTTP traffic for educational and ethical security analysis.
+Captures live network packets and prints a one-line summary per packet:
+source/destination IP, protocol, visible DNS queries, and an HTTP hint on
+port 80. A hands-on way to see what network monitoring looks like.
 
----
+> ⚠ **Authorized use only.** Capture traffic only on networks you own or are
+> explicitly permitted to monitor.
 
-## ⚠️ Disclaimer
+## Setup
 
-This tool is intended **only for use on networks you own or have permission to monitor**. Unauthorized sniffing may violate privacy laws or network policies.
+```bash
+pip install -r requirements.txt
+```
 
----
+Packet capture requires **root/administrator privileges**.
 
-## 🎯 Features
+## Usage
 
-- Real-time packet capture
-- IP, TCP/UDP, DNS, and HTTP inspection
-- Simple terminal output with timestamps
-- Extensible for further analysis (e.g., pcap logging, protocol filtering)
+```bash
+sudo python sniffer.py
+sudo python sniffer.py --iface eth0 --count 50 --filter "tcp port 80"
+```
 
----
+## Options
 
-## 🛠 Setup
+| Flag | Meaning |
+|------|---------|
+| `--iface` | Interface to capture on (default: scapy's default). |
+| `--count` | Stop after N packets (0 = run until Ctrl+C). |
+| `--filter` | BPF filter expression (e.g. `"tcp port 80"`, `"udp"`). |
 
-1. Install dependencies:
-   ```bash
-   pip install scapy
+## What changed in this rewrite
+
+- **Command-line options** for interface, packet count, and BPF filter.
+- **Clear errors** when scapy is missing or privileges are insufficient,
+  instead of an unhandled traceback.
+- Safer field access (guards around DNS/Raw layers) and a clean Ctrl+C exit.

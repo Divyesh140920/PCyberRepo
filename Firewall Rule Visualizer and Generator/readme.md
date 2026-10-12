@@ -1,20 +1,40 @@
 # Firewall Rule Visualizer and Generator
 
-## Description
-This Python tool parses firewall rule files (iptables-like syntax), detects conflicts, and visualizes rules graphically using a directed graph. It also suggests basic optimizations to improve rule efficiency and security.
+Parses a simple iptables-like rule file, flags shadowed/conflicting rules and
+merge opportunities, and renders the rule chain as a graph.
 
-## Features
-- Parses simple firewall rule files with action, protocol, source/destination IP and ports.
-- Detects conflicting rules (e.g., same parameters but different actions).
-- Visualizes rules and their order using a graph.
-- Suggests merging or optimization opportunities.
-- Easy to extend for more complex parsing and analysis.
+## Setup
 
-## Requirements
-- Python 3.x
-- `networkx` and `matplotlib` libraries (`pip install networkx matplotlib`)
+```bash
+pip install -r requirements.txt
+```
 
 ## Usage
-1. Create or provide a firewall rules file (`firewall_rules.txt`) in the specified format.
-2. Run the script: `python firewall_rule_visualizer.py`
-3. Review detected conflicts, optimization suggestions, and the graphical visualization.
+
+```bash
+python firewall_rule_visualizer.py firewall_rules.txt               # analyze + show graph
+python firewall_rule_visualizer.py firewall_rules.txt --output rules.png   # save graph to file
+python firewall_rule_visualizer.py firewall_rules.txt --no-graph    # text analysis only
+```
+
+## Rule format
+
+One rule per line; `#` starts a comment.
+
+```
+ACTION PROTOCOL SRC_IP DST_IP SRC_PORT DST_PORT
+ACCEPT tcp 192.168.1.0/24 10.0.0.1 1024 80
+DROP   udp 0.0.0.0/0      10.0.0.5 any  any
+```
+
+See `firewall_rules.txt` for a sample set (including a deliberate conflict).
+
+## What changed in this rewrite
+
+- **CLI** — the rule file is an argument, not a hard-coded name.
+- **Headless-friendly** — `--output file.png` renders with the `Agg` backend,
+  so it works over SSH or in CI where there is no display.
+- **Graceful degradation** — if `networkx`/`matplotlib` aren't installed, the
+  text analysis still runs and the graph step is skipped with a note.
+- **Cleaner parsing** — inline comments are stripped, and rules are modelled
+  as a dataclass rather than loose dicts.

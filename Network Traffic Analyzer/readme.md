@@ -1,24 +1,38 @@
-# Network Traffic Analyzer with Protocol Classification
+# Network Traffic Analyzer
 
-## Description
-A Python tool that captures live network packets and classifies them by protocol type: TCP, UDP, and ICMP. The tool provides real-time traffic statistics, giving insights into network usage patterns.
+Captures live packets and prints a periodic breakdown of traffic by protocol
+(TCP / UDP / ICMP / other), along with the busiest source addresses.
 
-This analyzer can help network administrators and security analysts monitor traffic composition on their networks.
+> ⚠ **Authorized use only.** Monitor only networks you own or are explicitly
+> permitted to observe.
 
-## Features
-- Live packet capture using `scapy`.
-- Classifies packets by protocol: TCP, UDP, ICMP, and others.
-- Real-time summary printed every 5 seconds.
-- Lightweight and easy to run.
+## Setup
 
-## Requirements
-- Python 3.x
-- `scapy` library (`pip install scapy`)
+```bash
+pip install -r requirements.txt
+```
+
+Requires **root/administrator privileges** to capture.
 
 ## Usage
-1. Run the script with administrator/root privileges (required for sniffing packets):
-2. Watch the console output for real-time protocol statistics.
-3. Press Ctrl+C to stop.
 
-## Disclaimer
-Run this tool only on networks where you have permission to capture traffic.
+```bash
+sudo python network_traffic_analyzer.py
+sudo python network_traffic_analyzer.py --iface eth0 --interval 10 --duration 60
+```
+
+## Options
+
+| Flag | Meaning |
+|------|---------|
+| `--iface` | Interface to capture on. |
+| `--interval` | Seconds between live reports (default 5). |
+| `--duration` | Stop after N seconds (0 = until Ctrl+C). |
+
+## What changed in this rewrite
+
+- **Top-talkers** tracking in addition to the protocol percentages.
+- **CLI options** for interface, report interval, and capture duration.
+- **Thread-safe stats** wrapped in a small class, and a clean shutdown using
+  an `Event` instead of a bare infinite loop.
+- Clear errors when scapy is missing or privileges are insufficient.
